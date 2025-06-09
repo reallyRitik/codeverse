@@ -1,0 +1,4 @@
+echo "node_modules/" > .gitignore
+echo "vendor/" >> .gitignore
+echo ".env" >> .gitignore
+echo "*.log" >> .gitignore
