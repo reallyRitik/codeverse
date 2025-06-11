@@ -3,7 +3,8 @@ import axios from 'axios';
 import { useRouter } from 'next/router';
 import { useAuth } from '../context/AuthContext';
 
-export default function Login() {
+export default function Register() {
+  const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
@@ -17,14 +18,15 @@ export default function Login() {
     setError('');
 
     try {
-      const res = await axios.post('http://127.0.0.1:8000/api/login', {
+      const res = await axios.post('http://127.0.0.1:8000/api/register', {
+        name,
         email,
         password,
       });
       login(res.data.user, res.data.token);
-      router.push('/dashboard'); // Changed from '/' to '/dashboard'
+      router.push('/');
     } catch (err) {
-      setError(err.response?.data?.error || 'Login failed');
+      setError(err.response?.data?.error || 'Registration failed');
     } finally {
       setLoading(false);
     }
@@ -32,8 +34,19 @@ export default function Login() {
 
   return (
     <div className='p-4 max-w-md mx-auto'>
-      <h1 className='text-2xl font-bold mb-4'>Login</h1>
+      <h1 className='text-2xl font-bold mb-4'>Register</h1>
       <form onSubmit={handleSubmit}>
+        <div className='mb-4'>
+          <label className='block text-sm font-medium mb-1'>Name</label>
+          <input
+            type='text'
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            className='border p-2 w-full rounded'
+            placeholder='Enter your name'
+            required
+          />
+        </div>
         <div className='mb-4'>
           <label className='block text-sm font-medium mb-1'>Email</label>
           <input
@@ -61,14 +74,14 @@ export default function Login() {
           className='bg-blue-500 text-white p-2 rounded hover:bg-blue-600 w-full'
           disabled={loading}
         >
-          {loading ? 'Logging in...' : 'Login'}
+          {loading ? 'Registering...' : 'Register'}
         </button>
       </form>
       {error && <p className='text-red-500 mt-2'>{error}</p>}
       <p className='mt-4'>
-        Don’t have an account?{' '}
-        <a href='/register' className='text-blue-500 hover:underline'>
-          Register here
+        Already have an account?{' '}
+        <a href='/login' className='text-blue-500 hover:underline'>
+          Login here
         </a>
       </p>
     </div>
