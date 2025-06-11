@@ -5,8 +5,10 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\AppController;
 
-Route::post('register', [AuthController::class, 'register']);
-Route::post('login', [AuthController::class, 'login']);
+Route::prefix('auth')->group(function () {
+    Route::get('{provider}', [AuthController::class, 'redirectToProvider']);
+    Route::get('{provider}/callback', [AuthController::class, 'handleProviderCallback']);
+});
 
 Route::middleware('auth:api')->group(function () {
     Route::post('apps', [AppController::class, 'store']);
